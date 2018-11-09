@@ -3,7 +3,7 @@ const qs = require("query-string");
 
 function buildCoffeeResponse(payload) {
   var payloadObj = qs.parse(payload);
-  console.log("PAYLOAD: " + payloadObj);
+  console.log(payloadObj);
 }
 
 module.exports = function coffee(request, response, tokens) {
