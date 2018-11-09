@@ -26,7 +26,7 @@ function unsplash(callback) {
   });
 }
 
-function giphy() {
+function giphy(callback) {
   var randomImageUrl = `https://api.giphy.com/v1/gifs/random?api_key=${
     config.giphy
   }&tag=coffee&rating=g`;
