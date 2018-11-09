@@ -1,8 +1,7 @@
 const tiny = require("tiny-json-http");
 
-function buildCoffeeResponse(request) {
-  var headers = request.headers;
-  console.log(headers);
+function buildCoffeeResponse(request, tokens) {
+  console.log(tokens);
 }
 
 module.exports = function coffee(request, response, tokens) {
@@ -14,5 +13,5 @@ module.exports = function coffee(request, response, tokens) {
   );
   response.end();
 
-  buildCoffeeResponse(request);
+  buildCoffeeResponse(request, tokens);
 };
