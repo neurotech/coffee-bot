@@ -15,7 +15,7 @@ function getQuestion() {
   return questions[Math.floor(Math.random() * questions.length)];
 }
 
-function getImage(callback) {
+function unsplash(callback) {
   var randomImageUrl = "https://source.unsplash.com/800x600/?coffee";
   https.get(randomImageUrl, res => {
     if (res.statusCode === 302) {
@@ -26,8 +26,25 @@ function getImage(callback) {
   });
 }
 
+function giphy() {
+  var randomImageUrl = `https://api.giphy.com/v1/gifs/random?api_key=${
+    config.giphy
+  }&tag=coffee&rating=g`;
+  https.get(randomImageUrl, res => {
+    if (res.statusCode === 200) {
+      console.log(res);
+      callback(null, res.data);
+    } else {
+      callback(Error("No image found!"));
+    }
+  });
+}
+
 function buildCoffeeResponse(payload) {
   // Get image
+  let providers = [unsplash, giphy];
+  let getImage = providers[Math.floor(Math.random() * providers.length)];
+
   getImage(function(err, res) {
     if (err) throw err;
     let url = payload.response_url;

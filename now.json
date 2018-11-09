@@ -2,6 +2,9 @@
   "name": "coffee-bot",
   "type": "npm",
   "alias": "coffeebot.now.sh",
+  "env": {
+    "COFFEEBOT_GIPHY_KEY": "@coffeebot-giphy-key"
+  },
   "scale": {
     "sfo1": {
       "min": 1,
