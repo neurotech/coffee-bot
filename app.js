@@ -4,7 +4,7 @@ const seaLion = new SeaLion();
 const coffee = require("./coffee");
 const log = require("./log");
 
-seaLion.add({ "/coffee": { POST: coffee } });
+seaLion.add({ "/coffee": coffee });
 
 let port = 4567;
 let server = http.createServer(seaLion.createHandler());
