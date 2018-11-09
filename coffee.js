@@ -4,12 +4,14 @@ const qs = require("query-string");
 function buildCoffeeResponse(payload) {
   // Generate question
   // Get image
-  tiny.post(
-    { url: payload.response_url, data: { text: "Coffee anyone?" } },
-    function(err) {
-      if (err) throw err;
-    }
-  );
+
+  console.log(payload.response_url);
+
+  let url = payload.response_url;
+  let data = { text: "Coffee anyone?" };
+  tiny.post({ url, data }, function(err) {
+    if (err) throw err;
+  });
 }
 
 module.exports = function coffee(request, response, tokens) {
