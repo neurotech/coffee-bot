@@ -1,6 +1,7 @@
 const https = require("https");
 const tiny = require("tiny-json-http");
 const qs = require("query-string");
+const config = require("./config");
 
 function getQuestion() {
   let questions = [
