@@ -37,7 +37,7 @@ function giphy(callback) {
       res.on("data", data => {
         json += data;
       });
-      res.on("end", function() {
+      res.on("end", () => {
         let gif = JSON.parse(json);
         callback(null, gif.data.images.downsized_large.url);
       });
@@ -48,7 +48,6 @@ function giphy(callback) {
 }
 
 function buildCoffeeResponse(payload) {
-  // Get image
   let providers = [unsplash, giphy];
   let getImage = providers[Math.floor(Math.random() * providers.length)];
 
@@ -71,7 +70,7 @@ function buildCoffeeResponse(payload) {
   });
 }
 
-module.exports = function coffee(request, response, tokens) {
+module.exports = function coffee(request, response) {
   response.writeHead(200, { "Content-Type": "application/json" });
   response.write(
     JSON.stringify({
@@ -81,10 +80,10 @@ module.exports = function coffee(request, response, tokens) {
   response.end();
 
   let payload = "";
-  request.on("data", function(data) {
+  request.on("data", data => {
     payload += data;
   });
-  request.on("end", function() {
+  request.on("end", () => {
     let parsed = qs.parse(payload);
     buildCoffeeResponse(parsed);
   });
