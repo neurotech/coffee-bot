@@ -2,8 +2,14 @@ const tiny = require("tiny-json-http");
 const qs = require("query-string");
 
 function buildCoffeeResponse(payload) {
-  var payloadObj = qs.parse(payload);
-  console.log(payloadObj);
+  // Generate question
+  // Get image
+  tiny.post(
+    { url: payload.response_url, data: { text: "Coffee anyone?" } },
+    function(err) {
+      if (err) throw err;
+    }
+  );
 }
 
 module.exports = function coffee(request, response, tokens) {
