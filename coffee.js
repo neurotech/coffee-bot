@@ -1,7 +1,7 @@
 const tiny = require("tiny-json-http");
 
-function buildCoffeeResponse(request, tokens) {
-  console.log(tokens);
+function buildCoffeeResponse(request) {
+  console.log(request);
 }
 
 module.exports = function coffee(request, response, tokens) {
@@ -13,5 +13,12 @@ module.exports = function coffee(request, response, tokens) {
   );
   response.end();
 
-  buildCoffeeResponse(request, tokens);
+  let payload = "";
+  request.on("data", function(data) {
+    payload += data;
+  });
+  request.on("end", function() {
+    let slack = JSON.parse(payload);
+    buildCoffeeResponse(slack);
+  });
 };
