@@ -33,7 +33,7 @@ function giphy(callback) {
   https.get(randomImageUrl, res => {
     if (res.statusCode === 200) {
       console.log(res);
-      callback(null, res.data);
+      callback(null, res.data.downsized_large.url);
     } else {
       callback(Error("No image found!"));
     }
