@@ -33,8 +33,14 @@ function giphy(callback) {
   }&tag=coffee&rating=g`;
   https.get(randomImageUrl, res => {
     if (res.statusCode === 200) {
-      console.log(res);
-      callback(null, res.data.downsized_large.url);
+      let json = "";
+      res.on("data", data => {
+        json += data;
+      });
+      res.on("end", function() {
+        let gif = JSON.parse(json);
+        callback(null, gif.data.images.downsized_large.url);
+      });
     } else {
       callback(Error("No image found!"));
     }
