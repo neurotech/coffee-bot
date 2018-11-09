@@ -5,7 +5,7 @@ function buildCoffeeResponse(payload) {
   // Generate question
   // Get image
 
-  console.log(payload.response_url);
+  console.log(payload);
 
   let url = payload.response_url;
   let data = { text: "Coffee anyone?" };
