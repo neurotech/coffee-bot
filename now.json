@@ -1,0 +1,11 @@
+{
+  "name": "coffee-bot",
+  "type": "npm",
+  "alias": "coffeebot.now.sh",
+  "scale": {
+    "sfo1": {
+      "min": 1,
+      "max": 1
+    }
+  }
+}

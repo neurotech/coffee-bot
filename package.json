@@ -1,0 +1,25 @@
+{
+  "name": "coffee-bot",
+  "version": "1.0.0",
+  "description": "Coffee anyone?",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neurotech/coffee-bot.git"
+  },
+  "author": "Tim Douglas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neurotech/coffee-bot/issues"
+  },
+  "homepage": "https://github.com/neurotech/coffee-bot#readme",
+  "dependencies": {
+    "log-symbols": "^2.2.0",
+    "sea-lion": "^2.0.2",
+    "spacetime": "^4.5.1",
+    "tiny-json-http": "^7.0.2"
+  }
+}
