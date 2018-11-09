@@ -4,9 +4,6 @@ const qs = require("query-string");
 function buildCoffeeResponse(payload) {
   // Generate question
   // Get image
-
-  console.log(payload);
-
   let url = payload.response_url;
   let data = { text: "Coffee anyone?" };
   tiny.post({ url, data }, function(err) {
@@ -28,6 +25,7 @@ module.exports = function coffee(request, response, tokens) {
     payload += data;
   });
   request.on("end", function() {
-    buildCoffeeResponse(payload);
+    let parsed = qs.parse(payload);
+    buildCoffeeResponse(parsed);
   });
 };
