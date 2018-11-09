@@ -2,7 +2,18 @@ const https = require("https");
 const tiny = require("tiny-json-http");
 const qs = require("query-string");
 
-function generateQuestion(callback) {}
+function getQuestion() {
+  let questions = [
+    "Coffee anyone?",
+    "Anyone for coffee?",
+    ":coffee: anyone?",
+    "Anyone for ｃｏｆｆｅｅ?",
+    "ｃｏｆｆｅｅ anyone?",
+    "Coffee time, anyone interested?",
+    "COFFEE who's interested?"
+  ];
+  return questions[Math.floor(Math.random() * questions.length)];
+}
 
 function getImage(callback) {
   var randomImageUrl = "https://source.unsplash.com/800x600/?coffee";
@@ -19,24 +30,19 @@ function buildCoffeeResponse(payload) {
   // Get image
   getImage(function(err, res) {
     if (err) throw err;
+    let url = payload.response_url;
     let imageUrl = res;
-    // Generate question
-    generateQuestion(function(err, res) {
+    let data = {
+      attachments: [
+        {
+          color: "#593C1F",
+          pretext: getQuestion(),
+          image_url: imageUrl
+        }
+      ]
+    };
+    tiny.post({ url, data }, function(err) {
       if (err) throw err;
-      let generatedQuestion = "Coffee anyone?";
-      let url = payload.response_url;
-      let data = {
-        attachments: [
-          {
-            color: "#593C1F",
-            pretext: generatedQuestion,
-            image_url: imageUrl
-          }
-        ]
-      };
-      tiny.post({ url, data }, function(err) {
-        if (err) throw err;
-      });
     });
   });
 }
