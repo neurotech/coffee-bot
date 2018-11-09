@@ -4,7 +4,8 @@
   "description": "Coffee anyone?",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "clean": "now --local-config now.json rm coffee-bot --safe --yes"
   },
   "repository": {
     "type": "git",
