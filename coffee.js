@@ -1,7 +1,9 @@
 const tiny = require("tiny-json-http");
+const qs = require("query-string");
 
 function buildCoffeeResponse(payload) {
-  console.log("PAYLOAD: " + payload);
+  var payloadObj = qs.parse(payload);
+  console.log("PAYLOAD: " + payloadObj);
 }
 
 module.exports = function coffee(request, response, tokens) {

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/neurotech/coffee-bot#readme",
   "dependencies": {
     "log-symbols": "^2.2.0",
+    "query-string": "^6.2.0",
     "sea-lion": "^2.0.2",
     "spacetime": "^4.5.1",
     "tiny-json-http": "^7.0.2"
