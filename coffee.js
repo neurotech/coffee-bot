@@ -56,6 +56,7 @@ function buildCoffeeResponse(payload) {
     let url = payload.response_url;
     let imageUrl = res;
     let data = {
+      response_type: "in_channel",
       attachments: [
         {
           color: "#593C1F",
