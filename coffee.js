@@ -72,12 +72,8 @@ function buildCoffeeResponse(payload) {
 }
 
 module.exports = function coffee(request, response) {
-  response.writeHead(200, { "Content-Type": "application/json" });
-  response.write(
-    JSON.stringify({
-      text: `:coffee: Request received. _Please wait..._`
-    })
-  );
+  response.writeHead(200);
+  response.write();
   response.end();
 
   let payload = "";
