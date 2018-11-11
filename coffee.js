@@ -47,17 +47,15 @@ function giphy(callback) {
   });
 }
 
-function getImageProvider(){
+function getRandomImage(callback){
   let providers = [unsplash, giphy];
   let getImage = providers[Math.floor(Math.random() * providers.length)];
 
-  return getImage;  
+  getImage(callback);  
 }
 
 function buildCoffeeResponse(payload) {
-  var getImage = getImageProvider();
-
-  getImage(function(err, res) {
+  getRandomImage(function(err, res) {
     if (err) throw err;
     let url = payload.response_url;
     let imageUrl = res;
@@ -78,7 +76,7 @@ function buildCoffeeResponse(payload) {
 }
 
 function handleGet(request, response){
-    getImageProvider(function(error, imageUrl){
+    getRandomImage(function(error, imageUrl){
       if(error){
         response.writeHead(500);
         response.end('An error occured');
