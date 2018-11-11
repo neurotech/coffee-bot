@@ -73,7 +73,7 @@ function buildCoffeeResponse(payload) {
 
 module.exports = function coffee(request, response) {
   response.writeHead(200);
-  response.write();
+  response.write("");
   response.end();
 
   let payload = "";
