@@ -47,9 +47,15 @@ function giphy(callback) {
   });
 }
 
-function buildCoffeeResponse(payload) {
+function getImageProvider(){
   let providers = [unsplash, giphy];
   let getImage = providers[Math.floor(Math.random() * providers.length)];
+
+  return getImage;  
+}
+
+function buildCoffeeResponse(payload) {
+  var getImage = getImageProvider();
 
   getImage(function(err, res) {
     if (err) throw err;
@@ -71,7 +77,26 @@ function buildCoffeeResponse(payload) {
   });
 }
 
+function handleGet(request, response){
+    getImageProvider(function(error, imageUrl){
+      if(error){
+        response.writeHead(500);
+        response.end('An error occured');
+        return;
+      }
+
+      response.writeHead(200, 'text/html');
+      response.end(`<img src="${imageUrl}"></img>`);
+    });
+}
+
 module.exports = function coffee(request, response) {
+  let method = request.method;
+  
+  if(method === 'GET'){
+    return handleGet(request, response);
+  }
+
   response.writeHead(200);
   response.write("");
   response.end();
