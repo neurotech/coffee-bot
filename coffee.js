@@ -91,7 +91,7 @@ function handleGet(request, response){
 module.exports = function coffee(request, response) {
   let method = request.method;
   
-  if(method === 'GET'){
+  if (method === 'GET') {
     return handleGet(request, response);
   }
 
