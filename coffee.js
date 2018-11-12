@@ -3,9 +3,8 @@ const tiny = require("tiny-json-http");
 const qs = require("query-string");
 const config = require("./config");
 
-function getImageFromUrl(url, callback){
-    https.get(url, callback)
-      .on('error', callback);
+function getImageFromUrl(url, callback) {
+  https.get(url, callback).on("error", callback);
 }
 
 function getQuestion() {
@@ -23,13 +22,13 @@ function getQuestion() {
 
 function unsplash(callback) {
   var randomImageUrl = "https://source.unsplash.com/800x600/?coffee";
-  getImageFromUrl(randomImageUrl, function(error, response){
-    if(error){
-        return callback(error);
+  getImageFromUrl(randomImageUrl, function(error, response) {
+    if (error) {
+      return callback(error);
     }
 
     if (response.statusCode === 302) {
-        return callback(null, response.headers["location"]);
+      return callback(null, response.headers["location"]);
     }
 
     return callback(Error("No image found!"));
@@ -40,10 +39,10 @@ function giphy(callback) {
   var randomImageUrl = `https://api.giphy.com/v1/gifs/random?api_key=${
     config.giphy
   }&tag=coffee&rating=g`;
-  
-  getImageFromUrl(randomImageUrl, function(){
-    if(error){
-        return callback(error);
+
+  getImageFromUrl(randomImageUrl, function() {
+    if (error) {
+      return callback(error);
     }
 
     if (response.statusCode === 200) {
@@ -58,7 +57,7 @@ function giphy(callback) {
       return;
     }
 
-    return callback(Error("No image found!")); 
+    return callback(Error("No image found!"));
   });
 }
 
@@ -66,7 +65,7 @@ function getRandomImage(callback) {
   let providers = [unsplash, giphy];
   let getImage = providers[Math.floor(Math.random() * providers.length)];
 
-  getImage(callback);  
+  getImage(callback);
 }
 
 function buildCoffeeResponse(payload) {
@@ -90,23 +89,23 @@ function buildCoffeeResponse(payload) {
   });
 }
 
-function handleGet(request, response){
-    getRandomImage(function(error, imageUrl){
-      if (error) {
-        response.writeHead(500);
-        response.end('An error occured');
-        return;
-      }
+function handleGet(request, response) {
+  getRandomImage(function(error, imageUrl) {
+    if (error) {
+      response.writeHead(500);
+      response.end("An error occured");
+      return;
+    }
 
-      response.writeHead(200, { 'Content-Type': 'text/html' });
-      response.end(`<img src="${imageUrl}"></img>`);
-    });
+    response.writeHead(200, { "Content-Type": "text/html" });
+    response.end(`<img src="${imageUrl}"></img>`);
+  });
 }
 
 module.exports = function coffee(request, response) {
   let method = request.method;
-  
-  if (method === 'GET') {
+
+  if (method === "GET") {
     return handleGet(request, response);
   }
 
