@@ -3,6 +3,26 @@ const tiny = require("tiny-json-http");
 const qs = require("query-string");
 const config = require("./config");
 
+function getImageFromUrl(url, callback){
+    var request = https.get(url, (response) => {
+        if (res.statusCode === 302) {
+          callback(null, res.headers["location"]);
+        } else if (res.statusCode === 200) {
+            let json = "";
+            res.on("data", data => {
+                json += data;
+            });
+            res.on("end", () => {
+                let gif = JSON.parse(json);
+                callback(null, gif.data.images.downsized_large.url);
+            });
+        } else {
+          callback(Error("No image found!"));
+        }
+    })
+    .on('error', callback);
+}
+
 function getQuestion() {
   let questions = [
     "Coffee anyone?",
@@ -18,33 +38,15 @@ function getQuestion() {
 
 function unsplash(callback) {
   var randomImageUrl = "https://source.unsplash.com/800x600/?coffee";
-  https.get(randomImageUrl, res => {
-    if (res.statusCode === 302) {
-      callback(null, res.headers["location"]);
-    } else {
-      callback(Error("No image found!"));
-    }
-  });
+  getImageFromUrl(randomImageUrl, callback);
 }
 
 function giphy(callback) {
   var randomImageUrl = `https://api.giphy.com/v1/gifs/random?api_key=${
     config.giphy
   }&tag=coffee&rating=g`;
-  https.get(randomImageUrl, res => {
-    if (res.statusCode === 200) {
-      let json = "";
-      res.on("data", data => {
-        json += data;
-      });
-      res.on("end", () => {
-        let gif = JSON.parse(json);
-        callback(null, gif.data.images.downsized_large.url);
-      });
-    } else {
-      callback(Error("No image found!"));
-    }
-  });
+  
+  getImageFromUrl(randomImageUrl, callback);
 }
 
 function getRandomImage(callback) {
