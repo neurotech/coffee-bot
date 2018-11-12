@@ -47,7 +47,7 @@ function giphy(callback) {
   });
 }
 
-function getRandomImage(callback){
+function getRandomImage(callback) {
   let providers = [unsplash, giphy];
   let getImage = providers[Math.floor(Math.random() * providers.length)];
 
