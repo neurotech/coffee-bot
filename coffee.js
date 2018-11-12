@@ -4,26 +4,7 @@ const qs = require("query-string");
 const config = require("./config");
 
 function getImageFromUrl(url, callback){
-    var request = https.get(url, (response) => {
-        if (response.statusCode === 302) {
-            return callback(null, response.headers["location"]);
-        }
-        
-        if (response.statusCode === 200) {
-            let json = "";
-            response.on("data", data => {
-                json += data;
-            });
-            response.on("end", () => {
-                let gif = JSON.parse(json);
-                callback(null, gif.data.images.downsized_large.url);
-            });
-            return;
-        }
-        
-        callback(Error("No image found!"));
-        
-    })
+    https.get(url, callback)
     .on('error', callback);
 }
 
@@ -42,7 +23,17 @@ function getQuestion() {
 
 function unsplash(callback) {
   var randomImageUrl = "https://source.unsplash.com/800x600/?coffee";
-  getImageFromUrl(randomImageUrl, callback);
+  getImageFromUrl(randomImageUrl, function(error, response){
+    if(error){
+        return callback(error);
+    }
+
+    if (response.statusCode === 302) {
+        return callback(null, response.headers["location"]);
+    }
+
+    return callback(Error("No image found!"));
+  });
 }
 
 function giphy(callback) {
@@ -50,7 +41,25 @@ function giphy(callback) {
     config.giphy
   }&tag=coffee&rating=g`;
   
-  getImageFromUrl(randomImageUrl, callback);
+  getImageFromUrl(randomImageUrl, function(){
+    if(error){
+        return callback(error);
+    }
+
+    if (response.statusCode === 200) {
+      let json = "";
+      response.on("data", data => {
+        json += data;
+      });
+      response.on("end", () => {
+        let gif = JSON.parse(json);
+        callback(null, gif.data.images.downsized_large.url);
+      });
+      return;
+    }
+
+    return callback(Error("No image found!")); 
+  });
 }
 
 function getRandomImage(callback) {
