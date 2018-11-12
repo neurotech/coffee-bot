@@ -77,7 +77,7 @@ function buildCoffeeResponse(payload) {
 
 function handleGet(request, response){
     getRandomImage(function(error, imageUrl){
-      if(error){
+      if (error) {
         response.writeHead(500);
         response.end('An error occured');
         return;
