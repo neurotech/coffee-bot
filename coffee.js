@@ -5,7 +5,7 @@ const config = require("./config");
 
 function getImageFromUrl(url, callback){
     https.get(url, callback)
-    .on('error', callback);
+      .on('error', callback);
 }
 
 function getQuestion() {
