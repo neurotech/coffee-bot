@@ -83,7 +83,7 @@ function handleGet(request, response){
         return;
       }
 
-      response.writeHead(200, 'text/html');
+      response.writeHead(200, { 'Content-Type': 'text/html' });
       response.end(`<img src="${imageUrl}"></img>`);
     });
 }
