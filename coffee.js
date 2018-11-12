@@ -5,20 +5,24 @@ const config = require("./config");
 
 function getImageFromUrl(url, callback){
     var request = https.get(url, (response) => {
-        if (res.statusCode === 302) {
-          callback(null, res.headers["location"]);
-        } else if (res.statusCode === 200) {
+        if (response.statusCode === 302) {
+            return callback(null, response.headers["location"]);
+        }
+        
+        if (response.statusCode === 200) {
             let json = "";
-            res.on("data", data => {
+            response.on("data", data => {
                 json += data;
             });
-            res.on("end", () => {
+            response.on("end", () => {
                 let gif = JSON.parse(json);
                 callback(null, gif.data.images.downsized_large.url);
             });
-        } else {
-          callback(Error("No image found!"));
+            return;
         }
+        
+        callback(Error("No image found!"));
+        
     })
     .on('error', callback);
 }
