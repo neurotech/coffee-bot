@@ -22,7 +22,7 @@ function getQuestion() {
   return questions[Math.floor(Math.random() * questions.length)];
 }
 
-function unsplash(callback) {
+function unSplash(callback) {
   var randomImageUrl = "https://source.unsplash.com/800x600/?coffee";
   var response = righto(getImageFromUrl, randomImageUrl);
   var result = response.get(response => {
