@@ -59,7 +59,7 @@ function giphy(callback) {
 }
 
 function getRandomImage(callback) {
-  let providers = [unsplash, giphy];
+  let providers = [unSplash, giphy];
   let getImage = providers[Math.floor(Math.random() * providers.length)];
 
   getImage(callback);
