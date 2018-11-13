@@ -5,7 +5,7 @@ const qs = require("query-string");
 const config = require("./config");
 
 function getImageFromUrl(url, callback) {
-  https.get(url, callback).on("error", callback);
+  https.get(url, callback.bind(null, null)).on("error", callback);
 }
 
 function getQuestion() {
@@ -88,6 +88,7 @@ function buildCoffeeResponse(payload) {
 function handleGet(request, response) {
   getRandomImage(function(error, imageUrl) {
     if (error) {
+      console.log(error);
       response.writeHead(500);
       response.end("An error occured");
       return;
