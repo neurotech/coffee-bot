@@ -3,6 +3,7 @@ const https = require("https");
 const tiny = require("tiny-json-http");
 const qs = require("query-string");
 const config = require("./config");
+const log = require("./log");
 
 function getImageFromUrl(url, callback) {
   https.get(url, callback.bind(null, null)).on("error", callback);
@@ -88,7 +89,7 @@ function buildCoffeeResponse(payload) {
 function handleGet(request, response) {
   getRandomImage(function(error, imageUrl) {
     if (error) {
-      console.log(error);
+      log.error(error);
       response.writeHead(500);
       response.end("An error occured");
       return;
