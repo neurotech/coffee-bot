@@ -4,9 +4,8 @@ const tiny = require("tiny-json-http");
 const qs = require("query-string");
 const config = require("./config");
 
-function getImageFromUrl(url, callback){
-  https.get(url, callback)
-    .on('error', callback);
+function getImageFromUrl(url, callback) {
+  https.get(url, callback).on("error", callback);
 }
 
 function getQuestion() {
@@ -27,7 +26,7 @@ function unsplash(callback) {
   var response = righto(getImageFromUrl, randomImageUrl);
   var result = response.get(response => {
     if (response.statusCode === 302) {
-        return response.headers["location"];
+      return response.headers["location"];
     }
 
     return righto.fail(Error("No image found!"));
@@ -36,14 +35,14 @@ function unsplash(callback) {
   result(callback);
 }
 
-function getGiphyRedirectUrl(response, callback){
+function getGiphyRedirectUrl(response, callback) {
   if (response.statusCode !== 200) {
-    return callback(Error("No image found!"))
+    return callback(Error("No image found!"));
   }
 
   let json = "";
-  response.on("data", data => json += data);
-  response.on("end", () => 
+  response.on("data", data => (json += data));
+  response.on("end", () =>
     callback(null, JSON.parse(json).data.images.downsized_large.url)
   );
 }
@@ -62,7 +61,7 @@ function getRandomImage(callback) {
   let providers = [unsplash, giphy];
   let getImage = providers[Math.floor(Math.random() * providers.length)];
 
-  getImage(callback);  
+  getImage(callback);
 }
 
 function buildCoffeeResponse(payload) {
@@ -86,23 +85,23 @@ function buildCoffeeResponse(payload) {
   });
 }
 
-function handleGet(request, response){
-    getRandomImage(function(error, imageUrl){
-      if (error) {
-        response.writeHead(500);
-        response.end('An error occured');
-        return;
-      }
+function handleGet(request, response) {
+  getRandomImage(function(error, imageUrl) {
+    if (error) {
+      response.writeHead(500);
+      response.end("An error occured");
+      return;
+    }
 
-      response.writeHead(200, { 'Content-Type': 'text/html' });
-      response.end(`<img src="${imageUrl}"></img>`);
-    });
+    response.writeHead(200, { "Content-Type": "text/html" });
+    response.end(`<img src="${imageUrl}"></img>`);
+  });
 }
 
 module.exports = function coffee(request, response) {
   let method = request.method;
-  
-  if (method === 'GET') {
+
+  if (method === "GET") {
     return handleGet(request, response);
   }
 
