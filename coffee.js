@@ -5,6 +5,9 @@ const qs = require("query-string");
 const config = require("./config");
 const log = require("./log");
 
+righto._debug = true;
+righto._autotraceOnError = true;
+
 function getImageFromUrl(url, callback) {
   https.get(url, callback.bind(null, null)).on("error", callback);
 }
