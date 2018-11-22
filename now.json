@@ -3,7 +3,8 @@
   "type": "npm",
   "alias": "coffeebot.now.sh",
   "env": {
-    "COFFEEBOT_GIPHY_KEY": "@coffeebot-giphy-key"
+    "COFFEEBOT_GIPHY_KEY": "@coffeebot-giphy-key",
+    "COFFEEBOT_SLACK_KEY": "@coffeebot-slack-key"
   },
   "scale": {
     "sfo1": {
