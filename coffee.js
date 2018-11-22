@@ -1,5 +1,5 @@
-const righto = require("righto");
 const https = require("https");
+const righto = require("righto");
 const tiny = require("tiny-json-http");
 const qs = require("query-string");
 const config = require("./config");
@@ -67,23 +67,16 @@ function getRandomImage(callback) {
   getImage(callback);
 }
 
-function getUserInfo(id) {
+function getUserInfo(id, callback) {
   let url = `https://slack.com/api/users.profile.get?token=${
     config.slack
   }&user=${id}`;
-  tiny.get({ url }, (err, res) => {
-    if (err) throw err;
-    console.log(
-      "Display Name normalized: " + res.body.profile.display_name_normalized
-    );
-    console.log(
-      "Real Name normalized: " + res.body.profile.real_name_normalized
-    );
-  });
+  tiny.get({ url }, callback);
 }
 
 function buildCoffeeResponse(payload) {
-  getUserInfo(payload.user_id);
+  var userInfo = righto(getUserInfo, payload.user_id);
+  console.info(userInfo);
   getRandomImage(function(err, res) {
     if (err) throw err;
     let url = payload.response_url;
