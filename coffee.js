@@ -8,8 +8,12 @@ const log = require("./log");
 righto._debug = true;
 righto._autotraceOnError = true;
 
+function request(method, settings, callback){
+  tiny[method](settings, callback);
+}
+
 function getImageFromUrl(url, callback) {
-  https.get(url, callback.bind(null, null)).on("error", callback);
+  request('get', { url }, callback);
 }
 
 function getQuestion(userName) {
@@ -59,15 +63,15 @@ function giphy(callback) {
   var randomImageUrl = `https://api.giphy.com/v1/gifs/random?api_key=${
     config.giphy
   }&tag=coffee&rating=g`;
-  var response = righto(getImageFromUrl, randomImageUrl);
-  var result = righto(getGiphyRedirectUrl, response);
+  var result = righto(getImageFromUrl, randomImageUrl)
+    .get(response => response.data.images.downsized_large.url);
 
   result(callback);
 }
 
 function getRandomImage(callback) {
   let providers = [unsplash, giphy];
-  let getImage = providers[Math.floor(Math.random() * providers.length)];
+  let getImage = providers[Math.floor(Math.random() * providers.length) % providers.length];
 
   getImage(callback);
 }
@@ -77,7 +81,7 @@ function getUserInfo(id, callback) {
     config.slack
   }&user=${id}`;
 
-  var profile = righto(tiny.get.bind(tiny), { url })
+  var profile = righto(request, 'get', { url })
     .get("body")
     .get("profile");
   profile(callback);
@@ -90,7 +94,7 @@ function buildCoffeeResponse(payload) {
     info => info.display_name_normalized || info.real_name_normalized
   );
   var imageUrl = righto(getRandomImage);
-  var question = righto(getQuestion, userName);
+  var question = righto.sync(getQuestion, userName);
 
   let data = righto.resolve(
     {
@@ -106,7 +110,7 @@ function buildCoffeeResponse(payload) {
     true
   );
 
-  var posted = righto(tiny.post.bind(tiny), righto.resolve({ url, data }));
+  var posted = righto(request, 'post', righto.resolve({ url, data }));
 
   posted(function(error) {
     if (error) {
@@ -149,3 +153,5 @@ module.exports = function coffee(request, response) {
     buildCoffeeResponse(parsed);
   });
 };
+
+module.exports.buildCoffeeResponse = buildCoffeeResponse;
