@@ -67,7 +67,23 @@ function getRandomImage(callback) {
   getImage(callback);
 }
 
+function getUserInfo(id) {
+  let url = `https://slack.com/api/users.profile.get?token=${
+    config.slack
+  }&user=${id}`;
+  tiny.get({ url }, (err, res) => {
+    if (err) throw err;
+    console.log(
+      "Display Name normalized: " + res.body.profile.display_name_normalized
+    );
+    console.log(
+      "Real Name normalized: " + res.body.profile.real_name_normalized
+    );
+  });
+}
+
 function buildCoffeeResponse(payload) {
+  getUserInfo(payload.user_id);
   getRandomImage(function(err, res) {
     if (err) throw err;
     let url = payload.response_url;
@@ -119,7 +135,6 @@ module.exports = function coffee(request, response) {
   });
   request.on("end", () => {
     let parsed = qs.parse(payload);
-    console.info("PARSED: " + JSON.stringify(parsed));
     buildCoffeeResponse(parsed);
   });
 };
