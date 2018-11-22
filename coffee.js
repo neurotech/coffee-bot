@@ -6,19 +6,26 @@ const config = require("./config");
 const questions = require("./questions");
 const log = require("./log");
 
-function user(id, callback) {
-  let url = `https://slack.com/api/users.profile.get?token=${
-    config.slack
-  }&user=${id}`;
-
+function fetch(url, callback) {
   https.get(url, response => {
     if (response.statusCode !== 200) return callback(Error("No image found!"));
 
     let json = "";
     response.on("data", data => (json += data));
     response.on("end", () => {
-      callback(null, JSON.parse(json).profile);
+      callback(null, JSON.parse(json));
     });
+  });
+}
+
+function user(id, callback) {
+  let url = `https://slack.com/api/users.profile.get?token=${
+    config.slack
+  }&user=${id}`;
+
+  fetch(url, (err, res) => {
+    if (err) callback(err);
+    callback(null, res.profile);
   });
 }
 
@@ -26,14 +33,10 @@ function giphy(callback) {
   var url = `https://api.giphy.com/v1/gifs/random?api_key=${
     config.giphy
   }&tag=coffee&rating=g`;
-  https.get(url, response => {
-    if (response.statusCode !== 200) return callback(Error("No image found!"));
 
-    let json = "";
-    response.on("data", data => (json += data));
-    response.on("end", () => {
-      callback(null, JSON.parse(json).data.images.downsized_large.url);
-    });
+  fetch(url, (err, res) => {
+    if (err) callback(err);
+    callback(null, res.data.images.downsized_large.url);
   });
 }
 
@@ -44,7 +47,7 @@ function buildCoffeeResponse(payload) {
   let combined = righto.mate(imageUrl, name);
 
   combined(function(error, imageUrl, profile) {
-    if (error) console.error(error);
+    if (error) log.error(error);
     let name = profile.display_name_normalized
       ? profile.display_name_normalized
       : profile.real_name_normalized;
@@ -62,7 +65,7 @@ function buildCoffeeResponse(payload) {
     };
 
     tiny.post({ url, data }, (err, res) => {
-      if (err) console.error(err);
+      if (err) log.error(err);
     });
   });
 }
