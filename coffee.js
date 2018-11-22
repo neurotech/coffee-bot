@@ -55,11 +55,14 @@ function buildCoffeeResponse(payload) {
   let imageUrl = righto(giphy);
   let user = righto(getUser, payload.user_id);
   let imageResponse = righto.sync(buildUserImageResponse, imageUrl, user);
-  let sent = righto(makeRequest, {
-    method: "post",
-    url: url,
-    data: imageResponse
-  });
+  let sent = righto(
+    makeRequest,
+    righto.resolve({
+      method: "post",
+      url: url,
+      data: imageResponse
+    })
+  );
 
   sent(error => {
     error && log.error(error);
