@@ -14,8 +14,8 @@ function getUser(id, callback) {
     config.slack
   }&user=${id}`;
 
-  var user = righto(makeRequest, { method: "get", url });
-  var profile = user.get("profile");
+  var userResponse = righto(makeRequest, { method: "get", url });
+  var profile = userResponse.get(response => response.body.profile);
 
   profile(callback);
 }
@@ -27,7 +27,7 @@ function giphy(callback) {
 
   var giphyResponse = righto(makeRequest, { method: "get", url });
   var url = giphyResponse.get(
-    response => response.data.images.downsized_large.url
+    response => response.body.data.images.downsized_large.url
   );
 
   url(callback);
