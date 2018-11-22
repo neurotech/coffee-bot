@@ -74,7 +74,7 @@ function getUserInfo(id, callback) {
     config.slack
   }&user=${id}`;
 
-  var profile = righto(tiny.get, { url })
+  var profile = righto(tiny.get.bind(tiny), { url })
     .get("body")
     .get("profile");
   profile(callback);
