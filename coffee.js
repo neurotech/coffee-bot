@@ -11,13 +11,15 @@ function getImageFromUrl(url, callback) {
 
 function getQuestion() {
   let questions = [
-    "Coffee anyone?",
     "Anyone for coffee?",
-    ":coffee: anyone?",
     "Anyone for ｃｏｆｆｅｅ?",
+    "Coffee anyone?",
     "ｃｏｆｆｅｅ anyone?",
     "Coffee time, anyone interested?",
-    "COFFEE who's interested?"
+    "COFFEE who's interested?",
+    ":coffee: anyone?",
+    ":coffee:?",
+    ":coffee: :coffee: :coffee:?"
   ];
   return questions[Math.floor(Math.random() * questions.length)];
 }
@@ -117,6 +119,7 @@ module.exports = function coffee(request, response) {
   });
   request.on("end", () => {
     let parsed = qs.parse(payload);
+    console.info("PARSED: " + parsed);
     buildCoffeeResponse(parsed);
   });
 };
