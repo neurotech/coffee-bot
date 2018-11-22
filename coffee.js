@@ -71,7 +71,10 @@ function getUserInfo(id, callback) {
   let url = `https://slack.com/api/users.profile.get?token=${
     config.slack
   }&user=${id}`;
-  tiny.get({ url }, callback);
+  tiny.get({ url }, (err, res) => {
+    if (err) callback(err);
+    callback(null, res.body);
+  });
 }
 
 function buildCoffeeResponse(payload) {
