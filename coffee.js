@@ -47,18 +47,6 @@ function unsplash(callback) {
   result(callback);
 }
 
-function getGiphyRedirectUrl(response, callback) {
-  if (response.statusCode !== 200) {
-    return callback(Error("No image found!"));
-  }
-
-  let json = "";
-  response.on("data", data => (json += data));
-  response.on("end", () =>
-    callback(null, JSON.parse(json).data.images.downsized_large.url)
-  );
-}
-
 function giphy(callback) {
   var randomImageUrl = `https://api.giphy.com/v1/gifs/random?api_key=${
     config.giphy
