@@ -119,7 +119,7 @@ module.exports = function coffee(request, response) {
   });
   request.on("end", () => {
     let parsed = qs.parse(payload);
-    console.info("PARSED: " + parsed);
+    console.info("PARSED: " + JSON.stringify(parsed));
     buildCoffeeResponse(parsed);
   });
 };
