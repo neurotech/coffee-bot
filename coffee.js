@@ -73,39 +73,42 @@ function getUserInfo(id, callback) {
   let url = `https://slack.com/api/users.profile.get?token=${
     config.slack
   }&user=${id}`;
-  tiny.get({ url }, (err, res) => {
-    if (err) callback(err);
-    callback(null, res.body.profile);
-  });
+
+  var profile = righto(tiny.get, { url })
+    .get("body")
+    .get("profile");
+  profile(callback);
 }
 
 function buildCoffeeResponse(payload) {
+  let url = payload.response_url;
   var userInfo = righto(getUserInfo, payload.user_id);
+  var userName = userInfo.get(
+    info => info.display_name_normalized || info.real_name_normalized
+  );
+  var imageUrl = righto(getRandomImage);
+  var question = righto(getQuestion, userName);
 
-  getRandomImage(function(err, res) {
-    if (err) throw err;
-    let userName = "";
-
-    userInfo(function(err, res) {
-      if (err) throw err;
-      userName = res.display_name_normalized || res.real_name_normalized;
-    });
-
-    let url = payload.response_url;
-    let imageUrl = res;
-    let data = {
+  let data = righto.resolve(
+    {
       response_type: "in_channel",
       attachments: [
         {
           color: "#593C1F",
-          pretext: getQuestion(userName),
+          pretext: question,
           image_url: imageUrl
         }
       ]
-    };
-    tiny.post({ url, data }, function(err) {
-      if (err) throw err;
-    });
+    },
+    true
+  );
+
+  var posted = righto(tiny.post, { url, data });
+
+  posted(function(error) {
+    if (error) {
+      console.error(error);
+    }
   });
 }
 
