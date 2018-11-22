@@ -9,7 +9,7 @@ function getImageFromUrl(url, callback) {
   https.get(url, callback.bind(null, null)).on("error", callback);
 }
 
-function getQuestion() {
+function getQuestion(userName) {
   let questions = [
     "Anyone for coffee?",
     "Anyone for ｃｏｆｆｅｅ?",
@@ -21,7 +21,9 @@ function getQuestion() {
     ":coffee:?",
     ":coffee: :coffee: :coffee:?"
   ];
-  return questions[Math.floor(Math.random() * questions.length)];
+  return `${userName} asks: ${
+    questions[Math.floor(Math.random() * questions.length)]
+  }`;
 }
 
 function unsplash(callback) {
@@ -73,15 +75,22 @@ function getUserInfo(id, callback) {
   }&user=${id}`;
   tiny.get({ url }, (err, res) => {
     if (err) callback(err);
-    callback(null, res.body);
+    callback(null, res.body.profile);
   });
 }
 
 function buildCoffeeResponse(payload) {
   var userInfo = righto(getUserInfo, payload.user_id);
-  console.info(userInfo);
+
   getRandomImage(function(err, res) {
     if (err) throw err;
+    let userName = "";
+
+    userInfo(function(err, res) {
+      if (err) throw err;
+      userName = res.display_name_normalized || res.real_name_normalized;
+    });
+
     let url = payload.response_url;
     let imageUrl = res;
     let data = {
@@ -89,7 +98,7 @@ function buildCoffeeResponse(payload) {
       attachments: [
         {
           color: "#593C1F",
-          pretext: getQuestion(),
+          pretext: getQuestion(userName),
           image_url: imageUrl
         }
       ]
