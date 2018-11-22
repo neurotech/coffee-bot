@@ -6,27 +6,19 @@ const config = require("./config");
 const questions = require("./questions");
 const log = require("./log");
 
-function fetch(url, callback) {
-  https.get(url, response => {
-    if (response.statusCode !== 200) return callback(Error("No image found!"));
-
-    let json = "";
-    response.on("data", data => (json += data));
-    response.on("end", () => {
-      callback(null, JSON.parse(json));
-    });
-  });
+function makeRequest(settings, callback){
+  tiny[settings.method](settings, callback);
 }
 
-function user(id, callback) {
+function getUser(id, callback) {
   let url = `https://slack.com/api/users.profile.get?token=${
     config.slack
   }&user=${id}`;
 
-  fetch(url, (err, res) => {
-    if (err) callback(err);
-    callback(null, res.profile);
-  });
+  var user = righto(makeRequest, { method: 'get', url });
+  var profile = user.get('profile');
+
+  profile(callback);
 }
 
 function giphy(callback) {
@@ -34,25 +26,20 @@ function giphy(callback) {
     config.giphy
   }&tag=coffee&rating=g`;
 
-  fetch(url, (err, res) => {
-    if (err) callback(err);
-    callback(null, res.data.images.downsized_large.url);
-  });
+  var giphyResponse = righto(makeRequest, { method: 'get', url });
+  var url = giphyResponse.get(response =>
+    response.data.images.downsized_large.url
+  );
+
+  url(callback);
 }
 
-function buildCoffeeResponse(payload) {
-  let url = payload.response_url;
-  let imageUrl = righto(giphy);
-  let name = righto(user, payload.user_id);
-  let combined = righto.mate(imageUrl, name);
-
-  combined(function(error, imageUrl, profile) {
-    if (error) log.error(error);
-    let name = profile.display_name_normalized
-      ? profile.display_name_normalized
-      : profile.real_name_normalized;
+function buildUserImageResponse(imageUrl, profile){
+    let name = (
+      profile.display_name_normalized ||
+      profile.real_name_normalized
+    );
     let question = questions(name);
-
     let data = {
       response_type: "in_channel",
       attachments: [
@@ -64,9 +51,18 @@ function buildCoffeeResponse(payload) {
       ]
     };
 
-    tiny.post({ url, data }, (err, res) => {
-      if (err) log.error(err);
-    });
+    return data;
+}
+
+function buildCoffeeResponse(payload) {
+  let url = payload.response_url;
+  let imageUrl = righto(giphy);
+  let user = righto(getUser, payload.user_id);
+  let imageResponse = righto.sync(buildCoffeeResponse, imageUrl, user);
+  let sent = righto(makeRequest, { method: 'post', url });
+
+  sent((error) => {
+    error && console.log(error);
   });
 }
 
