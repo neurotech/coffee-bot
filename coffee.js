@@ -106,9 +106,7 @@ function buildCoffeeResponse(payload) {
     true
   );
 
-  console.info("url: " + url);
-  console.info("data: " + data);
-  var posted = righto(tiny.post.bind(tiny), { url, data });
+  var posted = righto(tiny.post.bind(tiny), righto.resolve({ url, data }));
 
   posted(function(error) {
     if (error) {
