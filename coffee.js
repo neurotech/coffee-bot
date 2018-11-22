@@ -21,7 +21,7 @@ function getQuestion(userName) {
     ":coffee:?",
     ":coffee: :coffee: :coffee:?"
   ];
-  return `${userName} asks: ${
+  return `*${userName}* asks: ${
     questions[Math.floor(Math.random() * questions.length)]
   }`;
 }
