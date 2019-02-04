@@ -1,28 +1,16 @@
 const righto = require("righto");
 const tiny = require("tiny-json-http");
-const qs = require("query-string");
-const config = require("./config");
 const questions = require("./questions");
 const log = require("./log");
+if (process.env.NODE_ENV === "development") require("dotenv").config();
 
 function makeRequest(settings, callback) {
   tiny[settings.method](settings, callback);
 }
 
-function getUser(id, callback) {
-  let url = `https://slack.com/api/users.profile.get?token=${
-    config.slack
-  }&user=${id}`;
-
-  var userResponse = righto(makeRequest, { method: "get", url });
-  var profile = userResponse.get(response => response.body.profile);
-
-  profile(callback);
-}
-
 function giphy(callback) {
   var url = `https://api.giphy.com/v1/gifs/random?api_key=${
-    config.giphy
+    process.env.COFFEEBOT_GIPHY_KEY
   }&tag=coffee&rating=g`;
 
   var giphyResponse = righto(makeRequest, { method: "get", url });
@@ -33,14 +21,14 @@ function giphy(callback) {
   url(callback);
 }
 
-function buildUserImageResponse(imageUrl, profile) {
-  let name = profile.display_name_normalized || profile.real_name_normalized;
-  let question = questions(name);
+function buildUserImageResponse(imageUrl, asker) {
+  let palette = ["#2f1600", "#593C1F", "#886647", "#b99473"];
+  let question = questions(asker.name);
   let data = {
     response_type: "in_channel",
     attachments: [
       {
-        color: "#593C1F",
+        color: palette[Math.floor(Math.random() * palette.length)],
         pretext: question,
         image_url: imageUrl
       }
@@ -50,11 +38,11 @@ function buildUserImageResponse(imageUrl, profile) {
   return data;
 }
 
-function buildCoffeeResponse(payload) {
-  let url = payload.response_url;
+function buildCoffeeResponse(user) {
+  let url = process.env.COFFEEBOT_SLACK_WEBHOOK;
   let imageUrl = righto(giphy);
-  let user = righto(getUser, payload.user_id);
-  let imageResponse = righto.sync(buildUserImageResponse, imageUrl, user);
+  let asker = user && JSON.parse(user);
+  let imageResponse = righto.sync(buildUserImageResponse, imageUrl, asker);
   let sent = righto(
     makeRequest,
     righto.resolve({
@@ -70,8 +58,10 @@ function buildCoffeeResponse(payload) {
 }
 
 module.exports = function coffee(request, response) {
-  response.writeHead(200);
-  response.write("");
+  let defaultHeaders = { "Content-Type": "application/json" };
+
+  response.writeHead(200, defaultHeaders);
+  response.write(JSON.stringify({ response: "Success!" }));
   response.end();
 
   let payload = "";
@@ -79,7 +69,6 @@ module.exports = function coffee(request, response) {
     payload += data;
   });
   request.on("end", () => {
-    let parsed = qs.parse(payload);
-    buildCoffeeResponse(parsed);
+    buildCoffeeResponse(payload);
   });
 };

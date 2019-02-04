@@ -1,11 +1,21 @@
 {
   "name": "coffee-bot",
+  "version": 1,
   "type": "npm",
   "alias": "coffeebot.now.sh",
   "env": {
     "COFFEEBOT_GIPHY_KEY": "@coffeebot-giphy-key",
-    "COFFEEBOT_SLACK_KEY": "@coffeebot-slack-key"
+    "COFFEEBOT_SLACK_WEBHOOK": "@coffeebot-slack-webhook",
+    "COFFEEBOT_HASHED_PASSWORD": "@coffeebot-hashed-password"
   },
+  "files": [
+    "build",
+    "app.js",
+    "coffee.js",
+    "log.js",
+    "questions.js",
+    "README.md"
+  ],
   "scale": {
     "sfo1": {
       "min": 1,
