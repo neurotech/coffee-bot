@@ -16,6 +16,9 @@
     "questions.js",
     "README.md"
   ],
+  "github": {
+    "enabled": false
+  },
   "scale": {
     "sfo1": {
       "min": 1,
