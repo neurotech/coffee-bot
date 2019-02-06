@@ -45,6 +45,13 @@ module.exports = function(fastn, state) {
     },
     setLoading: function(loading) {
       fastn.Model.set(state, "loading", loading);
+    },
+    storeName: function() {
+      localStorage.setItem("coffee-bot-name", fastn.Model.get(state, "name"));
+    },
+    getName: function() {
+      var name = localStorage.getItem("coffee-bot-name");
+      fastn.Model.set(state, "name", name);
     }
   };
 
