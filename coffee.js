@@ -38,7 +38,7 @@ function buildUserImageResponse(imageUrl, asker) {
   return data;
 }
 
-function buildCoffeeResponse(user) {
+function buildCoffeeResponse(user, response) {
   let url = process.env.COFFEEBOT_SLACK_WEBHOOK;
   let imageUrl = righto(giphy);
   let asker = user && JSON.parse(user);
@@ -54,21 +54,20 @@ function buildCoffeeResponse(user) {
 
   sent(error => {
     error && log.error(error);
+    let defaultHeaders = { "Content-Type": "application/json" };
+
+    response.writeHead(200, defaultHeaders);
+    response.write(JSON.stringify({ response: "Success!" }));
+    response.end();
   });
 }
 
 module.exports = function coffee(request, response) {
-  let defaultHeaders = { "Content-Type": "application/json" };
-
-  response.writeHead(200, defaultHeaders);
-  response.write(JSON.stringify({ response: "Success!" }));
-  response.end();
-
   let payload = "";
   request.on("data", data => {
     payload += data;
   });
   request.on("end", () => {
-    buildCoffeeResponse(payload);
+    buildCoffeeResponse(payload, response);
   });
 };
