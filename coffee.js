@@ -1,18 +1,17 @@
 const righto = require("righto");
 const tiny = require("tiny-json-http");
 const qs = require("query-string");
-const config = require("./config");
 const questions = require("./questions");
 const log = require("./log");
+if (process.env.NODE_ENV === "development") require("dotenv").config();
 
 function makeRequest(settings, callback) {
   tiny[settings.method](settings, callback);
 }
 
 function getUser(id, callback) {
-  let url = `https://slack.com/api/users.profile.get?token=${
-    config.slack
-  }&user=${id}`;
+  let key = process.env.COFFEEBOT_SLACK_KEY;
+  let url = `https://slack.com/api/users.profile.get?token=${key}&user=${id}`;
 
   var userResponse = righto(makeRequest, { method: "get", url });
   var profile = userResponse.get(response => response.body.profile);
@@ -21,9 +20,8 @@ function getUser(id, callback) {
 }
 
 function giphy(callback) {
-  var url = `https://api.giphy.com/v1/gifs/random?api_key=${
-    config.giphy
-  }&tag=coffee&rating=g`;
+  let key = process.env.COFFEEBOT_GIPHY_KEY;
+  var url = `https://api.giphy.com/v1/gifs/random?api_key=${key}&tag=coffee&rating=g`;
 
   var giphyResponse = righto(makeRequest, { method: "get", url });
   var url = giphyResponse.get(
@@ -34,13 +32,14 @@ function giphy(callback) {
 }
 
 function buildUserImageResponse(imageUrl, profile) {
+  let palette = ["#2f1600", "#593C1F", "#886647", "#b99473"];
   let name = profile.display_name_normalized || profile.real_name_normalized;
   let question = questions(name);
   let data = {
     response_type: "in_channel",
     attachments: [
       {
-        color: "#593C1F",
+        color: palette[Math.floor(Math.random() * palette.length)],
         pretext: question,
         image_url: imageUrl
       }

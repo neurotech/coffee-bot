@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}\\app.js",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}\\.env"
     }
   ]
 }

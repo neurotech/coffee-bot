@@ -7,6 +7,7 @@
     "start": "node app.js",
     "deploy": "now --public --local-config now.json && now alias --local-config now.json",
     "clean": "now --local-config now.json rm coffee-bot --safe --yes",
+    "deployclean": "npm run deploy && npm run clean",
     "test": "node test"
   },
   "repository": {
@@ -24,10 +25,10 @@
     "query-string": "^6.2.0",
     "righto": "^5.0.0",
     "sea-lion": "^2.0.2",
-    "spacetime": "^4.5.1",
     "tiny-json-http": "^7.0.2"
   },
   "devDependencies": {
+    "dotenv": "^6.2.0",
     "tape": "^4.9.1"
   }
 }

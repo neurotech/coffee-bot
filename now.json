@@ -2,6 +2,7 @@
   "name": "coffee-bot",
   "type": "npm",
   "alias": "coffeebot.now.sh",
+  "version": 1,
   "env": {
     "COFFEEBOT_GIPHY_KEY": "@coffeebot-giphy-key",
     "COFFEEBOT_SLACK_KEY": "@coffeebot-slack-key"
