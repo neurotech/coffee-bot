@@ -1,5 +1,11 @@
 module.exports = function getQuestion(userName) {
-  let verbs = ["asks", "asked", "would like to know", "inquires"];
+  let verbs = [
+    "asks",
+    "asked",
+    "would like to know",
+    "inquires",
+    "wants to know"
+  ];
   let questions = [
     "Anyone for coffee?",
     "Anyone for ｃｏｆｆｅｅ?",
